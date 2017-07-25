@@ -38,7 +38,7 @@ namespace WY.AppManage.Controllers
             }
             else
             {
-                var data = _context.App.Select(t => new AppViewModel { Id = t.Id, Name = t.Name, FileUrl = t.FileUrl, Number = t.Number, CreateTime = t.CreateTime });
+                var data = _context.App.Select(t => new AppViewModel { Id = t.Id, Name = t.Name, FileUrl = t.FileUrl, Number = t.Number, CreateTime = t.CreateTime.ToLocalTime() });
                 return Ok(new { code = 1, msg = "ok", date = data });
             }
         }
@@ -62,14 +62,20 @@ namespace WY.AppManage.Controllers
         }
 
         // PUT: api/App/5
-        [HttpPut]
-        public async Task<IActionResult> App(int id, [Bind("Name,Number,FileUrl")]ChangeAppViewModel ChangeAppViewModel)
+        [HttpPost]
+        public async Task<IActionResult> Appput(int id, [Bind("Name,Number,FileUrl")]ChangeAppViewModel ChangeAppViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return Ok(new { code = 0, msg = BadRequest(ModelState).Value });
             }
-            _context.Entry(new App { Id = id, Name = ChangeAppViewModel.Name, Number = ChangeAppViewModel.Number, FileUrl = ChangeAppViewModel.FileUrl }).State = EntityState.Modified;
+
+
+            var p = _context.App.SingleOrDefault(m => m.Id == id);
+            p.Name = ChangeAppViewModel.Name;
+            p.FileUrl = ChangeAppViewModel.FileUrl;
+            p.Number = ChangeAppViewModel.Number;
+            _context.Entry(p).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -90,28 +96,23 @@ namespace WY.AppManage.Controllers
 
         // POST: api/App
         [HttpPost]
-        public async Task<IActionResult> App(int id,[Bind("Name,Number,FileUrl")] AddAppViewModel AddAppViewModel)
+        public async Task<IActionResult> App(int id, AddAppViewModel AddAppViewModel)
         {
+
             if (!ModelState.IsValid)
             {
                 return Ok(new { code = 0, msg = BadRequest(ModelState).Value });
             }
 
-            //var canyon = (from d in _context.Project
-            //              where d.Id ==id
-            //              select d).Single();
-            //canyon.App.Add()
+            _context.Project.SingleOrDefault(m => m.Id == id).App.Add(new App { Name = AddAppViewModel.Name, CreateTime = DateTime.Now, Number = AddAppViewModel.Number, FileUrl = AddAppViewModel.FileUrl });
 
-            //var t = _context.Project.FirstOrDefault();
-            //t.App.Add(new App { });
-            _context.App.Add(new App { CreateTime = DateTime.Now, FileUrl = AddAppViewModel.FileUrl, Number = AddAppViewModel.Number, Name = AddAppViewModel.Name });
             await _context.SaveChangesAsync();
             return Ok(new { code = 1, msg = "ok" });
         }
 
         // DELETE: api/App/5
-        [HttpDelete]
-        public async Task<IActionResult> App(int id)
+        [HttpPost]
+        public async Task<IActionResult> Appdel(int id)
         {
             if (!ModelState.IsValid)
             {

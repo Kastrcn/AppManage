@@ -15,6 +15,8 @@ using WY.AppManage.Services;
 
 namespace WY.AppManage.Controllers
 {
+
+
     [Authorize]
     public class AccountController : Controller
     {

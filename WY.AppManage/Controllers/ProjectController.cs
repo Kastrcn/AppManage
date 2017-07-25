@@ -9,6 +9,7 @@ using WY.AppManage.Data;
 using WY.AppManage.Models;
 using AppManage.Model;
 using WY.AppManage.Models.ProjectViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WY.AppManage.Controllers
 {
@@ -63,7 +64,10 @@ namespace WY.AppManage.Controllers
                 return Ok(new { code = 0, msg = BadRequest(ModelState).Value });
             }
 
-            _context.Entry(new Project { Id = id, Name = ChangeProjectViewModel.Name }).State = EntityState.Modified;
+            var p = _context.Project.SingleOrDefault(m => m.Id == id);
+            p.Name = ChangeProjectViewModel.Name;
+
+            _context.Entry(p).State = EntityState.Modified;
 
             try
             {
@@ -99,7 +103,7 @@ namespace WY.AppManage.Controllers
 
         // DELETE: api/Project/5
         [HttpPost]
-        public async Task<IActionResult> Projectdel(int id,string name)
+        public async Task<IActionResult> Projectdel(int id)
         {
             if (!ModelState.IsValid)
             {

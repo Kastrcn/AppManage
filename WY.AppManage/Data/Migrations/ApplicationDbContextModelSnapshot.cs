@@ -225,6 +225,24 @@ namespace WY.AppManage.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("WY.AppManage.Models.Suggest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime>("CreateTime");
+
+                    b.Property<string>("Location");
+
+                    b.Property<string>("PhoneModel");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suggest");
+                });
+
             modelBuilder.Entity("AppManage.Model.App", b =>
                 {
                     b.HasOne("AppManage.Model.Project")

@@ -47,8 +47,10 @@ namespace WY.AppManage
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddCors();
-            services.AddMvc();
-
+            services.AddMvc().AddJsonOptions(opt =>
+            {
+                opt.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
+            });
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

@@ -24,8 +24,8 @@ namespace WY.AppManage.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
 
-        public virtual  DbSet<Project> Project { get; set; }
-        public virtual  DbSet<App> App { get; set; }
+        public virtual DbSet<Project> Project { get; set; }
+        public virtual DbSet<App> App { get; set; }
         public virtual DbSet<Carousel> Carousel { get; set; }
         public DbSet<Suggest> Suggest { get; set; }
     }
@@ -114,6 +114,15 @@ namespace WY.AppManage.Data
                      }
                  }
             );
+                context.Carousel.AddRange(
+                    new Carousel { Name = "测试", Url = "www.baidu.com", CreateTime = DateTime.Now },
+                    new Carousel { Name = "测试", Url = "www.baidu.com", CreateTime = DateTime.Now }
+                    , new Carousel { Name = "测试", Url = "www.baidu.com", CreateTime = DateTime.Now });
+                context.Suggest.AddRange(
+
+                    new Suggest { PhoneModel = "小米", Location = "北京", Content = "什么破接口", CreateTime = DateTime.Now },
+                      new Suggest { PhoneModel = "一加", Location = "深圳", Content = "什么破接口", CreateTime = DateTime.Now },
+                        new Suggest { PhoneModel = "锤子", Location = "广州", Content = "什么破接口", CreateTime = DateTime.Now });
                 await context.SaveChangesAsync();
             }
         }
